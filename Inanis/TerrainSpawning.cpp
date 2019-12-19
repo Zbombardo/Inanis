@@ -50,43 +50,38 @@ bool TerrainSpawning::spawn() {
 	//newPlatform.h = dimensions::platformHeight;
 	//newPlatform.w = length;
 	//newPlatform.x = dimensions::terrainSpawnerX;
-	
-	SDL_Rect newPlatform;
-	newPlatform.x = dimensions::terrainSpawnerX;
-	newPlatform.h = dimensions::platformHeight;
-	newPlatform.w = dimensions::maxPlatformLength;
 
 	std::cerr << generatingOrder.size() << std::endl;
 	if (platforms.size() == 0) {
-		//std::cerr << "Stavlja prvi\n";
 	}
-	else if (platforms.size() != 0 && isColliding()) { 
-		//std::cerr << "Sudar\n";
-		return 0; 
-	}
-	else if (generatingOrder.size() == 0) {
+	else if (platforms.size() != 0 && isColliding() || generatingOrder.size() == 0)
 		return 0;
-	}
 
-	//std::cerr << "ide\n";
+	/*SDL_Rect newRect;
+	newRect.x = dimensions::terrainSpawnerX;
+	newRect.h = dimensions::platformHeight;
+	newRect.w = dimensions::maxPlatformLength;
 
-	switch (generatingOrder.front())
+	TerrainPosition pos = generatingOrder.front();
+
+	switch (pos)
 	{
-	case SpawnerPosition::LOWER:
-		newPlatform.y = dimensions::terrainLowerSpawnerY;
+	case TerrainPosition::LOWER:
+		newRect.y = dimensions::terrainLowerSpawnerY;
 		break;
-	case SpawnerPosition::MIDDLE:
-		newPlatform.y = dimensions::terrainMiddleSpawnerY;
+	case TerrainPosition::MIDDLE:
+		newRect.y = dimensions::terrainMiddleSpawnerY;
 		break;
-	case SpawnerPosition::UPPER:
-		newPlatform.y = dimensions::terrainUpperSpawnerY;
+	case TerrainPosition::UPPER:
+		newRect.y = dimensions::terrainUpperSpawnerY;
 		break;
 	}
 
+	platforms.push_back( Platform(newRect, pos) );*/
+
+	platforms.push_back( Platform(dimensions::terrainSpawnerX, dimensions::maxPlatformLength, dimensions::platformHeight, generatingOrder.front()) );
 	generatingOrder.erase(generatingOrder.begin());	//remove this generated pos
 	
-	platforms.push_back(newPlatform);
-
 	return 1;
 }
 
@@ -103,7 +98,7 @@ void TerrainSpawning::update() {
 	int newX;								//new value of x coordinate
 	int numOFAlreadyPassed(0);				//number of non-colliding platform that have already been passed 
 
-	for (std::vector<SDL_Rect>::iterator it = platforms.begin(); it != platforms.end(); ++it) {
+	for (std::vector<Platform>::iterator it = platforms.begin(); it != platforms.end(); ++it) {
 		newX = it->x - dimensions::velocity;	//shift left
 		if (newX <= dimensions::terrainDestroyerX) {
 			destroy();
@@ -119,7 +114,7 @@ void TerrainSpawning::update() {
 
 void TerrainSpawning::draw() {
 
-	for (std::vector<SDL_Rect>::iterator it = platforms.begin(); it != platforms.end(); ++it) {
+	for (std::vector<Platform>::iterator it = platforms.begin(); it != platforms.end(); ++it) {
 		SDL_RenderCopy(_Renderer, _Texture, NULL, &*it);
 		//SDL_RenderDrawRect(_Renderer, &*it);
 	}
@@ -134,21 +129,21 @@ void TerrainSpawning::generateMap() {
 	
 	//implicitly LOWER = 0, MIDDLE = 1, UPPER = 2
 	int pos;
-	generatingOrder.push_back(SpawnerPosition::LOWER);		//by default start at lower
+	generatingOrder.push_back(TerrainPosition::LOWER);		//by default start at lower
 	for (int i(0); i < MAP_SIZE; i++) {
-		if (generatingOrder.back() == SpawnerPosition::LOWER) {		//if last generated is LOWER then next one can be either LOWER or MIDDLE
+		if (generatingOrder.back() == TerrainPosition::LOWER) {		//if last generated is LOWER then next one can be either LOWER or MIDDLE
 			pos = rand() % 2;
 		}
 		else {
 			pos = rand() % 3;
 		}
-		generatingOrder.push_back(static_cast<SpawnerPosition>(pos));
+		generatingOrder.push_back(static_cast<TerrainPosition>(pos));
 	}
 }
 
-SDL_Rect TerrainSpawning::firstLowest() {
+/*SDL_Rect TerrainSpawning::firstLowest() {
 
-	for (std::vector<SDL_Rect>::iterator it = platforms.begin; it != platforms.end(); ++it) {
+	for (std::vector<Platform>::iterator it = platforms.begin(); it != platforms.end(); ++it) {
 
 	}
-}
+}*/
