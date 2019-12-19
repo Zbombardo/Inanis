@@ -26,12 +26,12 @@ private:
 
 private:
 	bool isColliding();
-	bool init();
+	bool init(SDL_Renderer* _Renderer);
 	SDL_Rect firstLowest();
 	SDL_Rect firstMiddle();
 	SDL_Rect firstUpper();
 public:
-	TerrainSpawning();
+	TerrainSpawning(SDL_Renderer* _Renderer);
 	void generateMap();
 	bool spawn();
 	void update();

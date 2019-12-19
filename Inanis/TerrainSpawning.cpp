@@ -1,34 +1,25 @@
 #include "TerrainSpawning.h"
 #include <iostream>
 
-TerrainSpawning::TerrainSpawning() {
+TerrainSpawning::TerrainSpawning(SDL_Renderer* _Renderer) {
 	
-	if (!init()) {
-		std::cerr << "Terrain Spawner could not initialize";
+	if (!init(_Renderer)) {
+		std::cerr << "Terrain Spawner could not initialize\n";
 	}
 	
 	b_halt = 0;
 }
 
-bool TerrainSpawning::init() {
-
-	_Window = SDL_CreateWindow("Neko smece",
-							   SDL_WINDOWPOS_UNDEFINED,
-							   SDL_WINDOWPOS_UNDEFINED,
-							   dimensions::resolution[0],
-					           dimensions::resolution[1], 0);
-	if (_Window == nullptr) {
-		std::cerr << "Could not initialize TerrainWindow\n" << SDL_GetError();
-		b_ButtonClosed = 0;
-		return 0;
-	}
-	b_ButtonClosed = 1;
-	_Renderer = SDL_CreateRenderer(_Window, -1, SDL_RENDERER_PRESENTVSYNC);
-	if (_Renderer == nullptr) {
+bool TerrainSpawning::init(SDL_Renderer* _Renderer) {
+	
+	this->_Renderer = _Renderer;
+	if (this->_Renderer == nullptr) {
 		std::cerr << "Could not initialize terrain renderer\n" << SDL_GetError();
+		b_ButtonClosed = 1;
 		return 0;
 	}
 
+	b_ButtonClosed = 0;
 	_Surface = IMG_Load(IMG_PATH);
 	if (_Surface == nullptr) {
 		std::cerr << "Could not initalize texture\n" << SDL_GetError();
