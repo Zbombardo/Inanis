@@ -1,6 +1,6 @@
 #pragma once
 
-
+//all used constants in my code
 namespace dimensions {
 
 	constexpr int resolution[] = { 1366, 768 };	//screen resolution

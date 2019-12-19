@@ -1,6 +1,7 @@
 #include "TerrainSpawning.h"
 #include <iostream>
 
+#define LVL_SIZE 112	//change lvl size, num of platforms
 bool init(SDL_Window* Win, SDL_Renderer* Rect);
 
 int main(int argc, char** args) {
@@ -49,14 +50,13 @@ int main(int argc, char** args) {
 #endif
 
 	TerrainSpawning TSpawn = TerrainSpawning(_Rend);
-	TSpawn.generateMap();
+	TSpawn.generateMap(LVL_SIZE);
 	int n(0);
 
 	SDL_Event Event;
 	while (!TSpawn.getB_ButtonClosed()) {
 		if (SDL_PollEvent(&Event) && Event.type == SDL_QUIT) break;
-		if (n % 100 == 0 && !TSpawn.getB_Halt()) {
-			n = 0;
+		if (n % 2 == 0 && !TSpawn.getB_Halt()) {
 			SDL_RenderClear(_Rend);
 			TSpawn.spawn();
 			TSpawn.update();

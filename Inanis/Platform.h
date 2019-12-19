@@ -3,6 +3,7 @@
 #include "TerrainPosition.h"
 #include "dimensions.h"
 
+//has everything a SDL_Rect has and TerrainPosition and some bonus functions
 class Platform : public SDL_Rect
 {
 private:
